@@ -4,11 +4,14 @@ import {
   createUserWithEmailAndPassword,
   getAuth,
   onAuthStateChanged,
+  signInWithEmailAndPassword,
   signOut,
   type FirebaseAuthTypes,
 } from "@react-native-firebase/auth";
 import { UserAuth, AuthParams } from "./types";
 import { AuthErrorCodeEnum } from "./enums";
+import { Alert } from "react-native";
+import { authBasicHandler } from "./utils/authErrorHandlers";
 
 export const AuthContext = createContext<{
   signIn: UserAuth;
@@ -27,33 +30,36 @@ export const AuthContext = createContext<{
 export function AuthProvider({ children }: PropsWithChildren) {
   const [[isLoading, session], setAuth] = useStorageState("userState");
 
-  const handleAuthStateChanged = useCallback((user: FirebaseAuthTypes.User | null) => {
-    setAuth(JSON.stringify(user));
-  }, []);
+  const handleAuthStateChanged = useCallback(
+    (user: FirebaseAuthTypes.User | null) => {
+      setAuth(JSON.stringify(user));
+    },
+    [setAuth]
+  );
 
   useEffect(() => {
     const subscriber = onAuthStateChanged(getAuth(), handleAuthStateChanged);
     return subscriber; // unsubscribe on unmount
-  }, []);
+  }, [handleAuthStateChanged]);
 
-  const fbSignAuth = useCallback(
+  const emailSignUp = useCallback(
     ({ email, password }: AuthParams) =>
-      //https://rnfirebase.io/auth/usage#emailpassword-sign-in method can do both
       createUserWithEmailAndPassword(getAuth(), email, password)
         .then(() => {
           console.log("User account created & signed in!");
         })
-        .catch((error) => {
-          if (error.code === AuthErrorCodeEnum.EMAIL_ALREADY_IN_USE) {
-            console.log("That email address is already in use!");
-          }
+        .catch(authBasicHandler),
+    []
+  );
 
-          if (error.code === AuthErrorCodeEnum.INVALID_EMAIL) {
-            console.log("That email address is invalid!");
-          }
-
-          console.error(error);
-        }),
+  const emailSignIn = useCallback(
+    ({ email, password }: AuthParams) =>
+      //https://rnfirebase.io/auth/usage#emailpassword-sign-in method can do both
+      signInWithEmailAndPassword(getAuth(), email, password)
+        .then(() => {
+          console.log("User account created & signed in!");
+        })
+        .catch(authBasicHandler),
     []
   );
 
@@ -65,8 +71,8 @@ export function AuthProvider({ children }: PropsWithChildren) {
   return (
     <AuthContext
       value={{
-        signIn: fbSignAuth,
-        signUp: fbSignAuth,
+        signIn: emailSignIn,
+        signUp: emailSignUp,
         signOut: fbSignOut,
         session: JSON.parse(session as string),
         isLoading,

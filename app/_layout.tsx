@@ -42,18 +42,21 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
-  const { isLoggedIn } = useAuth();
+  const { session } = useAuth();
 
   return (
     <Stack>
-      <Stack.Protected guard={!isLoggedIn}>
+      <Stack.Protected guard={!session}>
         <Stack.Screen name="auth/sign-in" options={{ headerTitle: "Sign in" }} />
-        <Stack.Screen name="auth/sign-up" options={{ headerTitle: "Sing up" }} />
+        <Stack.Screen name="auth/sign-up" options={{ headerTitle: "Sign up" }} />
       </Stack.Protected>
 
-      <Stack.Protected guard={isLoggedIn}>
+      <Stack.Protected guard={!!session}>
         <Stack.Screen name="(app)/(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: "modal" }} />
+        <Stack.Screen
+          name="modal"
+          options={{ presentation: "modal", headerTitle: "Profile" }}
+        />
       </Stack.Protected>
     </Stack>
   );
