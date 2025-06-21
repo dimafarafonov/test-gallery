@@ -6,6 +6,8 @@
     "dev": "expo start",
     "android": "expo run:android",
     "ios": "expo run:ios",
+    "install:module": "npx expo install",
+    "prebuild": "npx expo prebuild",
     "web": "expo start --web",
     "test": "jest --watchAll"
   },
@@ -15,8 +17,10 @@
   "dependencies": {
     "@expo/vector-icons": "^14.1.0",
     "@react-native-firebase/app": "^22.2.1",
+    "@react-native-firebase/auth": "^22.2.1",
     "@react-navigation/native": "^7.1.6",
     "expo": "~53.0.12",
+    "expo-build-properties": "~0.14.6",
     "expo-font": "~13.3.1",
     "expo-linking": "~7.1.5",
     "expo-router": "~5.1.0",
