@@ -1,4 +1,3 @@
-import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { DarkTheme, DefaultTheme, ThemeProvider } from "@react-navigation/native";
 
 import { Stack } from "expo-router";
@@ -9,6 +8,7 @@ import { useColorScheme } from "@/components/useColorScheme";
 import { useFontsLoader } from "@/hooks/useFonts";
 import { AuthProvider } from "@/providers/auth/AuthProvider";
 import { SplashScreenController } from "@/controllers/SplashScreenController";
+import { useAuth } from "@/providers/auth/hooks/useAuth";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -42,10 +42,19 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
+  const { isLoggedIn } = useAuth();
+
   return (
     <Stack>
-      <Stack.Screen name="(app)/(tabs)" options={{ headerShown: false }} />
-      <Stack.Screen name="modal" options={{ presentation: "modal" }} />
+      <Stack.Protected guard={!isLoggedIn}>
+        <Stack.Screen name="auth/sign-in" options={{ headerTitle: "Sign in" }} />
+        <Stack.Screen name="auth/sign-up" options={{ headerTitle: "Sing up" }} />
+      </Stack.Protected>
+
+      <Stack.Protected guard={isLoggedIn}>
+        <Stack.Screen name="(app)/(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="modal" options={{ presentation: "modal" }} />
+      </Stack.Protected>
     </Stack>
   );
 }

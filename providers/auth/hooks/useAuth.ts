@@ -8,5 +8,7 @@ export function useAuth() {
     throw new Error("useSession must be wrapped in a <SessionProvider />");
   }
 
-  return value;
+  const isLoggedIn = !!value?.session;
+
+  return { ...value, isLoggedIn };
 }
