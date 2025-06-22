@@ -9,8 +9,7 @@ import {
   type FirebaseAuthTypes,
 } from "@react-native-firebase/auth";
 import { UserAuth, AuthParams } from "./types";
-import { AuthErrorCodeEnum } from "./enums";
-import { Alert } from "react-native";
+
 import { authBasicHandler } from "./utils/authErrorHandlers";
 
 export const AuthContext = createContext<{

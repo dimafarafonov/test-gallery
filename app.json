@@ -44,6 +44,14 @@
           }
         }
       ],
+      [
+        "expo-media-library",
+        {
+          "photosPermission": "Allow $(PRODUCT_NAME) to access your gallery. This is important for proper work of our application.",
+          "savePhotosPermission": "Allow $(PRODUCT_NAME) to save photos. If you want to save your progress.",
+          "isAccessMediaLocationEnabled": true
+        }
+      ],
       "expo-secure-store"
     ],
     "experiments": {
