@@ -3,26 +3,14 @@ import { Pressable, FlatList, Dimensions, StyleSheet, View, Text } from "react-n
 import { Image } from "expo-image";
 
 import * as MediaLibrary from "expo-media-library";
+import { useCallback } from "react";
+import { useRouter } from "expo-router";
 
 const { width: screenWidth } = Dimensions.get("screen");
 const imageWidth = 80;
 const imageHeight = 80;
 const gap = 0.5;
 const columnNumber = Math.round(screenWidth / (imageWidth + 8));
-
-const renderItem = ({ item }: { item: MediaLibrary.Asset }) => {
-  const { uri } = item;
-
-  return (
-    <Pressable style={({ pressed }) => [{ opacity: pressed ? 0.6 : 1 }]}>
-      <Image
-        source={{ uri }}
-        contentFit="cover"
-        style={{ width: imageWidth, height: imageHeight }}
-      />
-    </Pressable>
-  );
-};
 
 const ListEmptyComponent = () => {
   return (
@@ -38,6 +26,30 @@ type Props = {
 };
 
 const GalleryList = ({ items, onEndReached }: Props) => {
+  const router = useRouter();
+
+  const renderItem = useCallback(
+    ({ item }: { item: MediaLibrary.Asset }) => {
+      const { uri, id } = item;
+
+      return (
+        <Pressable
+          style={({ pressed }) => [{ opacity: pressed ? 0.6 : 1 }]}
+          onPress={() =>
+            router.replace({ pathname: "/(app)/(tabs)/two", params: { id } })
+          }
+        >
+          <Image
+            source={{ uri }}
+            contentFit="cover"
+            style={{ width: imageWidth, height: imageHeight }}
+          />
+        </Pressable>
+      );
+    },
+    [router]
+  );
+
   return (
     <FlatList
       contentContainerStyle={styles.listView}
@@ -49,7 +61,7 @@ const GalleryList = ({ items, onEndReached }: Props) => {
       data={items}
       renderItem={renderItem}
       onEndReached={onEndReached}
-      onEndReachedThreshold={0.2}
+      onEndReachedThreshold={0.4}
       keyExtractor={(item) => item.id}
       removeClippedSubviews={true}
     />
@@ -63,7 +75,7 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     justifyContent: "center",
     alignItems: "center",
-    flex: 1,
+    flexGrow: 1,
   },
   emptyView: { alignItems: "center", justifyContent: "center" },
 });

@@ -1,4 +1,3 @@
-import { StatusBar } from "expo-status-bar";
 import { Platform, Pressable, StyleSheet } from "react-native";
 
 import { Text, View } from "@/components/Themed";
@@ -20,8 +19,6 @@ export default function ModalScreen() {
         darkColor="rgba(255,255,255,0.1)"
       />
       <Text>{JSON.stringify(session, null, 2)}</Text>
-
-      <StatusBar style={Platform.OS === "ios" ? "light" : "auto"} />
     </View>
   );
 }
