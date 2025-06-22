@@ -1,5 +1,5 @@
 import { useAuth } from "@/providers/auth/hooks/useAuth";
-import { FormContainer } from "@/screens/auth/components/FormContent";
+import { FormContainer } from "@/screens/auth/fractions/FormContent";
 import { useCallback, useState } from "react";
 import { KeyboardAvoidingView, Platform, StyleSheet } from "react-native";
 
