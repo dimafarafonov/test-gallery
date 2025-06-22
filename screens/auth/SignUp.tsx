@@ -20,7 +20,7 @@ const SignUpScreen = () => {
     >
       <FormContainer
         redirectRoute={"/auth/sign-in"}
-        redirectLabel="Sign in"
+        redirectLabel="Sign up"
         email={email}
         password={password}
         setEmail={setEmail}

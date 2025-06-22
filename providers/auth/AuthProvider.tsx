@@ -56,7 +56,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
       //https://rnfirebase.io/auth/usage#emailpassword-sign-in method can do both
       signInWithEmailAndPassword(getAuth(), email, password)
         .then(() => {
-          console.log("User account created & signed in!");
+          console.log("Signed in!");
         })
         .catch(authBasicHandler),
     []

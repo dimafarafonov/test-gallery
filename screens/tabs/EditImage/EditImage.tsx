@@ -69,6 +69,14 @@ export const EditImage = () => {
     return <BasicLoader />;
   }
 
+  if (!image) {
+    return (
+      <View style={styles.emptyState}>
+        <Text>Please choose image to procced</Text>
+      </View>
+    );
+  }
+
   if (!skiaImage) {
     return (
       <View style={styles.emptyState}>
