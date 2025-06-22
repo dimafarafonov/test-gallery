@@ -1,4 +1,4 @@
-import { Platform, Pressable, StyleSheet } from "react-native";
+import { Pressable, StyleSheet } from "react-native";
 
 import { Text, View } from "@/components/Themed";
 import { useAuth } from "@/providers/auth/hooks/useAuth";
