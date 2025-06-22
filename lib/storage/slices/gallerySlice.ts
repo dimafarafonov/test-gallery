@@ -32,7 +32,7 @@ export const gallerySlice = createSlice({
     },
   },
 });
-export const { selectAll, selectById, selectEntities } = galleryAdapter.getSelectors();
+export const { selectAll, selectById } = galleryAdapter.getSelectors();
 export const selectPagedInfo = (gallery: typeof initialState) => gallery.pagedInfo;
 
 export const selectPaginationData = createSelector(

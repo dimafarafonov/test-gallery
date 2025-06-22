@@ -1,4 +1,4 @@
-import { Button, StyleSheet, useWindowDimensions } from "react-native";
+import { Button, StyleSheet, useWindowDimensions, Text } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 
 import { View } from "@/components/Themed";
@@ -13,22 +13,24 @@ import {
   ColorMatrix,
   useCanvasRef,
 } from "@shopify/react-native-skia";
-//first decision was this react-native-color-matrix-image-filters + view-shot but
+//first decision was react-native-color-matrix-image-filters + view-shot but
 import { readAsStringAsync, EncodingType } from "expo-file-system";
 
 import { useCallback, useEffect, useState } from "react";
 import { Asset, getAssetInfoAsync } from "expo-media-library";
 import { grayscaleMatrix, invertMatrix1 } from "./configs";
 import { useControls } from "./useControls";
+import { BasicLoader } from "@/lib/loaders/BasicLoader";
 
 export const EditImage = () => {
   const [skiaImage, setSkiaImage] = useState<SkImage | null>(null);
+  const [isConverting, setIsConverting] = useState(false);
   const ref = useCanvasRef();
+  const { width, height } = useWindowDimensions();
 
   const params = useLocalSearchParams<{ id: string }>();
   const image = useAppSelector((state) => selectById(state.gallery, params?.id));
 
-  const { width, height } = useWindowDimensions();
   const {
     saveToGalleryFromCanvas,
     addGrayscale,
@@ -39,6 +41,7 @@ export const EditImage = () => {
   } = useControls();
 
   const convertPhotoToBase64 = useCallback(async (galleryImage: Asset) => {
+    setIsConverting(true);
     try {
       if (!galleryImage) {
         throw new Error("No local URI found for asset");
@@ -52,15 +55,27 @@ export const EditImage = () => {
       const data = Skia.Data.fromBase64(base64);
       const image = Skia.Image.MakeImageFromEncoded(data);
       setSkiaImage(image);
-    } catch (error) {
-      console.error("Error converting photo to base64:", error);
-      return null;
+    } finally {
+      setIsConverting(false);
     }
   }, []);
 
   useEffect(() => {
     convertPhotoToBase64(image);
-  }, [convertPhotoToBase64, image]);
+    // adding convertPhotoToBase64 doesn't make sense, as it is dependency array is []
+  }, [image]);
+
+  if (isConverting) {
+    return <BasicLoader />;
+  }
+
+  if (!skiaImage) {
+    return (
+      <View style={styles.emptyState}>
+        <Text>We couldn&apos;t parse this image</Text>
+      </View>
+    );
+  }
 
   return (
     <>
@@ -99,5 +114,10 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     gap: 50,
     backgroundColor: "transparent",
+  },
+  emptyState: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
