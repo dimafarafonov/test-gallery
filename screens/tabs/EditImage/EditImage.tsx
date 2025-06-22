@@ -13,6 +13,7 @@ import {
   ColorMatrix,
   useCanvasRef,
 } from "@shopify/react-native-skia";
+//first decision was this react-native-color-matrix-image-filters + view-shot but
 import { readAsStringAsync, EncodingType } from "expo-file-system";
 
 import { useCallback, useEffect, useState } from "react";
