@@ -44,7 +44,7 @@ const FormContainer = ({
       <Pressable
         onPress={() => {
           //https://github.com/expo/expo/issues/37213
-          //Replace is just the last stronhold, cause expo-router 5 messed up
+          //Replace is just the last stronhold, cause expo-router 5 is messed up
           // with screen navigation, particularly with navigate method
           // more details explanation https://github.com/expo/expo/issues/37469
           //at first <Link/> comp was used (proved broken)

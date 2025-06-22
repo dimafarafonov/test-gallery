@@ -4,6 +4,7 @@ import { saveToLibraryAsync } from "expo-media-library";
 import { useRouter } from "expo-router";
 import { useCallback, useReducer } from "react";
 import { Alert } from "react-native";
+import { Buffer } from "buffer";
 
 type State = {
   grayscale: boolean;
