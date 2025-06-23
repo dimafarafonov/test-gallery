@@ -41,7 +41,9 @@ const GalleryList = ({ items, onEndReached }: Props) => {
         >
           <Image
             source={{ uri }}
+            placeholder={{ blurhash: "LGFFaXYk^6#M@-5c,1J5@[or[Q6." }} // add blurhash to avoid white spaces
             contentFit="cover"
+            transition={1000}
             style={{ width: imageWidth, height: imageHeight }}
           />
         </Pressable>
@@ -61,7 +63,7 @@ const GalleryList = ({ items, onEndReached }: Props) => {
       data={items}
       renderItem={renderItem}
       onEndReached={onEndReached}
-      onEndReachedThreshold={0.4}
+      onEndReachedThreshold={0.6}
       keyExtractor={(item) => item.id}
       removeClippedSubviews={true}
     />
