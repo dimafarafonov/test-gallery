@@ -1,0 +1,34 @@
+
+
+// http://localhost:5173/?date=2025-09-03&time=14:30
+export function parseQueryDateTime(search: string) {
+  const params = new URLSearchParams(search);
+
+  const day = params.get("date"); // "2025-09-03"
+  const timeStr = params.get("time"); // "14:30"
+
+  let hour = 0;
+  let minutes = 0;
+  let unit = "AM";
+
+  if (timeStr) {
+    const [h, m] = timeStr.split(":").map(Number);
+    hour = h;
+    minutes = m;
+
+    if (hour >= 12) {
+      unit = "pm";
+      if (hour > 12) hour -= 12; // 13 → 1, 14 → 2 і т.д.
+    } else {
+      unit = "am";
+      if (hour === 0) hour = 12; // 0:30 → 12:30 AM
+    }
+  }
+
+  return {
+    day: day || null,
+    hour: hour || null,
+    minutes: minutes || null,
+    unit: unit || null,
+  };
+}
