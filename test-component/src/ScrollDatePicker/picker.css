@@ -14,24 +14,6 @@
   scroll-snap-stop: always;
 }
 
-.child2 {
-  scroll-snap-align: center;
-  scroll-snap-stop: always;
-  transform: rotateX(45deg);
-}
-
-.child3 {
-  scroll-snap-align: center;
-  scroll-snap-stop: always;
-  transform: rotateX(65deg);
-}
-
-.child1 {
-  scroll-snap-align: center;
-  scroll-snap-stop: always;
-  transform: rotateX(30deg);
-}
-
 /* .child:focus {
   scroll-snap-align: center;
   scroll-snap-stop: always;

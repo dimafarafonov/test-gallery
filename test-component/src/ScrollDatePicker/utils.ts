@@ -2,7 +2,7 @@
 export function parseQueryDateTime(search: string) {
   const params = new URLSearchParams(search);
 
-  const day = params.get("date"); // "2025-09-03"
+  const day = dateFormat(params.get("date")!); // "2025-09-03"
   const timeStr = params.get("time"); // "14:30"
 
   let hour = 0;
@@ -29,4 +29,22 @@ export function parseQueryDateTime(search: string) {
     min: String(minutes - (minutes % 5)) || null,
     unit: unit || null,
   };
+}
+
+export function dateIncreament(timestamp: number, dayIncrement: number) {
+  const date = new Date(timestamp);
+
+  date.setDate(date.getDate() + dayIncrement);
+
+  return dateFormat(date);
+}
+
+function dateFormat(date: string | number | Date) {
+  return new Date(date)
+    .toLocaleDateString("en-US", {
+      weekday: "short",
+      month: "short",
+      day: "numeric",
+    })
+    .replace(",", "");
 }
