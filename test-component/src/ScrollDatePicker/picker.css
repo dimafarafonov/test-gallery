@@ -14,10 +14,4 @@
   scroll-snap-stop: always;
 }
 
-/* .child:focus {
-  scroll-snap-align: center;
-  scroll-snap-stop: always;
-  opacity: 0.2;
-} */
-
 /* Got from https://www.w3schools.com/howto/howto_css_hide_scrollbars.asp */

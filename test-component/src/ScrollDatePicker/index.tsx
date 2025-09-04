@@ -1,6 +1,6 @@
+import "./picker.css";
 import { Overlay } from "./Overlay";
 import { timePickerValues } from "./parts";
-import "./picker.css";
 import { useDatePicker } from "./useDatePicker";
 
 const VISIBLE_AREA = 30;
