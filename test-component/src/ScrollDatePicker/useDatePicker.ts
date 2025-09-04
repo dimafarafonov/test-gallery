@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { parseQueryDateTime } from "./utils";
+import { timePickerValues } from "./parts";
 
 const debounceTimers: {
   unit: undefined | number;
@@ -42,6 +43,25 @@ export const useDatePicker = () => {
               };
             });
           }, 500);
+          // not perfect, but looks infinite)
+          if (timePickerValues[parentId as DebounceKeys] && parentId !== "unit") {
+            timePickerValues[parentId as DebounceKeys].forEach((elem) => {
+              const newElem = document.createElement("div");
+              newElem.textContent = elem.props.children;
+              newElem.className = elem.props.className;
+              const properRef =
+                parentId === "min"
+                  ? minutesRef.current
+                  : parentId === "day"
+                  ? daysRef.current
+                  : parentId === "hour"
+                  ? hourRef.current
+                  : unitRef.current;
+              // @ts-expect-error exists
+              properRef?.appendChild(newElem);
+            });
+          }
+
           // @ts-expect-error exists
           entry.target.style.transform = ``;
         }
