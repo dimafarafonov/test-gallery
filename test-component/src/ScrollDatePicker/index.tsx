@@ -71,11 +71,9 @@ export const ScrollDatePicker = () => {
   const hourRef = useRef(null);
   const unitRef = useRef(null);
 
-  const all = parseQueryDateTime(window.location.search)
-  console.log('all', all)
+  const all = parseQueryDateTime(window.location.search);
   useEffect(() => {
     const columns = [minutesRef.current, daysRef.current, hourRef.current, unitRef.current];
-
     const callback: IntersectionObserverCallback = (entries) => {
       entries.forEach((entry) => {
         if (!entry.isIntersecting) {
@@ -113,7 +111,21 @@ export const ScrollDatePicker = () => {
     return () => toDisconnect.forEach((item) => item.disconnect());
   }, []);
 
-  console.log("test", test);
+  useEffect(() => {
+    const columns = [minutesRef.current, daysRef.current, hourRef.current, unitRef.current];
+
+    columns.forEach((ref) => {
+      const elems = ref!.querySelectorAll(".child");
+      elems.forEach((element: Element) => {
+        const [, parentId] = element.className.split(" ");
+        if (all[parentId] === element.textContent) {
+          element.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+      });
+    });
+  }, []);
+
+  console.log("all", all);
   return (
     <>
       <div

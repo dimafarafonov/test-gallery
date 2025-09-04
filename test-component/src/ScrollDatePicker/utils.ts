@@ -1,5 +1,3 @@
-
-
 // http://localhost:5173/?date=2025-09-03&time=14:30
 export function parseQueryDateTime(search: string) {
   const params = new URLSearchParams(search);
@@ -26,9 +24,9 @@ export function parseQueryDateTime(search: string) {
   }
 
   return {
-    day: day || null,
-    hour: hour || null,
-    minutes: minutes || null,
+    day: String(day) || null,
+    hour: String(hour) || null,
+    min: String(minutes - (minutes % 5)) || null,
     unit: unit || null,
   };
 }
