@@ -1,7 +1,7 @@
 import "./picker.css";
+import { useEffect, useRef } from "react";
 
 const VISIBLE_AREA = 30;
-
 const scrollStyles = {
   scrollSnapType: "y mandatory",
   overflow: "scroll",
@@ -9,64 +9,113 @@ const scrollStyles = {
   flexDirection: "column",
   justifyContent: "flex-start",
   transition: "0.5s ease",
-  width: "fit-content",
-  paddingTop: 50,
-  paddingBottom: 50,
-  paddingLeft: 10,
-  paddingRight: 10,
+  padding: "55px 0px 55px 0px",
   height: VISIBLE_AREA,
   fontSize: 20,
+  color: "black",
+  transformStyle: "preserve-3d",
 } as React.CSSProperties;
 
-export const ScrollDatePicker = () => {
+const Overlay = () => {
   return (
-    <div style={{ display: "flex", gap: 20, position: "relative" }}>
+    <>
+      <div
+        style={{
+          borderRadius: 10,
+          top: 0,
+          left: 0,
+          height: "45%",
+          width: "100%",
+          position: "absolute",
+          background: "inherit",
+          opacity: 0.7,
+          pointerEvents: "none",
+        }}
+      />
+      <div
+        style={{
+          borderRadius: 10,
+          bottom: 0,
+          left: 0,
+          height: "45%",
+          width: "100%",
+          position: "absolute",
+          background: "inherit",
+          opacity: 0.7,
+          pointerEvents: "none",
+        }}
+      />
+    </>
+  );
+};
+
+export const ScrollDatePicker = () => {
+  const minutesRef = useRef(null);
+
+  useEffect(() => {
+    const options = {
+      root: minutesRef.current!,
+      rootMargin: "0px",
+      scrollMargin: "-45% 0px -45% 0px",
+    };
+
+    const children = minutesRef.current!.querySelectorAll(".child");
+
+    const callback: IntersectionObserverCallback = (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) {
+          // console.log(`Hidden: ${entry.target.textContent}`);
+          // // Trigger your event here
+          entry.target.style.transform = `rotateX(45deg)`;
+        } else {
+          entry.target.style.transform = ``;
+        }
+      });
+    };
+
+    const observer = new IntersectionObserver(callback, options);
+    children.forEach((child: Element) => observer.observe(child));
+    return () => observer.disconnect();
+  }, [minutesRef]);
+
+  return (
+    <div
+      id="container"
+      style={{
+        display: "flex",
+        gap: 20,
+        position: "relative",
+        background: "white",
+        borderRadius: 10,
+        padding: 40,
+      }}
+    >
       {/* day */}
       <div style={scrollStyles} className="hide" id="day">
-        <div className="child">Wed Jul 11</div>
-        <div className="child">Wed Jul 11</div>
-        <div className="child">Wed Jul 11</div>
-        <div className="child">Wed Jul 11</div>
-        <div className="child">Wed Jul 11</div>
-        <div className="child">Wed Jul 11</div>
+        {Array.from({ length: 25 }, (_, i) => i + 1).map((item) => (
+          <div className="child">{item}</div>
+        ))}
       </div>
       {/* hour */}
 
       <div style={scrollStyles} className="hide" id="hour">
-        <div className="child">1</div>
-        <div className="child">2</div>
-        <div className="child">3</div>
-        <div className="child">4</div>
-        <div className="child">5</div>
-        <div className="child">6</div>
-        <div className="child">6</div>
-        <div className="child">7</div>
-        <div className="child">8</div>
-        <div className="child">9</div>
-        <div className="child">10</div>
-        <div className="child">11</div>
-        <div className="child">12</div>
+        {Array.from({ length: 12 }, (_, i) => i + 1).map((item) => (
+          <div className="child">{item}</div>
+        ))}
       </div>
       {/* minutes */}
 
-      <div style={scrollStyles} className="hide" id="min">
-        <div className="child">00</div>
-        <div className="child">05</div>
-        <div className="child">10</div>
-        <div className="child">15</div>
-        <div className="child">20</div>
-        <div className="child">25</div>
-        <div className="child">30</div>
-        <div className="child">35</div>
-        <div className="child">40</div>
-        <div className="child">45</div>
-        <div className="child">50</div>
-        <div className="child">55</div>
+      <div style={scrollStyles} className="hide" id="min" ref={minutesRef}>
+        {Array.from({ length: 12 }, (_, i) => i * 5).map((item) => (
+          <div className="child">{item || "00"}</div>
+        ))}
       </div>
       <div style={scrollStyles} className="hide" id="unit">
         <div className="child">am</div>
         <div className="child">pm</div>
       </div>
+      <Overlay />
+
       {/* daytime */}
     </div>
   );
