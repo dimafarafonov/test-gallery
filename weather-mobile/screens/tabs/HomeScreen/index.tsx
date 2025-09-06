@@ -1,6 +1,7 @@
 import { StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
 
-import { useForecast } from "@/services/weather/hooks/useForecast";
+import { useForecastHistory } from "@/hooks/useForecastHistory";
+import { useForecastApi } from "@/services/weather/hooks/useForecastApi";
 import { Ionicons } from "@expo/vector-icons";
 import { Image, ImageBackground } from "expo-image";
 import { useRouter } from "expo-router";
@@ -11,7 +12,8 @@ export function HomeScreen() {
   const router = useRouter();
   const [city, setCity] = useState("");
 
-  const { getTodaysForecast, isLoading } = useForecast();
+  const { getTodaysForecast, isLoading } = useForecastApi();
+  const {} = useForecastHistory();
 
   const search = useCallback(() => {
     getTodaysForecast({ city }).then(({ forecast }) => {

@@ -1,4 +1,4 @@
-import { type TodaysForecast } from "@/services/weather/hooks/useForecast";
+import { type TodaysForecast } from "@/services/weather/hooks/useForecastApi";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { useEffect, useMemo } from "react";
 import { StyleSheet, View } from "react-native";
@@ -18,7 +18,7 @@ export function ForecastModal() {
     if (!parsedForecast) {
       return;
     }
-    navigation.setOptions({ title: `${parsedForecast.name}/${parsedForecast.country}`, headerShown: true });
+    navigation.setOptions({ title: `${parsedForecast.name}, ${parsedForecast.country}`, headerShown: true });
   }, [navigation, parsedForecast]);
 
   const isLoading = false;

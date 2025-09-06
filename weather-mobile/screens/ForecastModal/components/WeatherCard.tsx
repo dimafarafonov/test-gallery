@@ -1,4 +1,4 @@
-import { TodaysForecast } from "@/services/weather/hooks/useForecast";
+import { TodaysForecast } from "@/services/weather/hooks/useForecastApiApi";
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { StyleSheet, Text, View } from "react-native";

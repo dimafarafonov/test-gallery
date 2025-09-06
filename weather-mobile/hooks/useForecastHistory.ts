@@ -1,3 +1,5 @@
+import { useCallback } from "react";
+
 const mockItems = [
   { key: "kyiv", label: "Kyiv" },
   { key: "london", label: "London" },
@@ -12,5 +14,9 @@ const mockItems = [
   { key: "cape_town", label: "Cape Town" },
 ];
 export const useForecastHistory = () => {
+  const deleteEntry = useCallback(() => {}, []);
+
+  const undoDeletion = useCallback(() => {}, []);
+
   return { history: mockItems };
 };
