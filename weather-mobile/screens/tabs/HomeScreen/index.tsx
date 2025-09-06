@@ -2,7 +2,7 @@ import { StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
 
 import { useForecast } from "@/services/weather/hooks/useForecast";
 import { Ionicons } from "@expo/vector-icons";
-import { ImageBackground } from "expo-image";
+import { Image, ImageBackground } from "expo-image";
 import { useRouter } from "expo-router";
 import { useCallback, useMemo, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -11,17 +11,17 @@ export function HomeScreen() {
   const router = useRouter();
   const [city, setCity] = useState("");
 
-  const { getTodaysForecast, isLoading } = useForecast({ city });
+  const { getTodaysForecast, isLoading } = useForecast();
 
   const search = useCallback(() => {
-    getTodaysForecast().then(({ forecast }) => {
+    getTodaysForecast({ city }).then(({ forecast }) => {
       if (!forecast) {
         return;
       }
 
       router.navigate({ pathname: "/forecast-modal", params: { forecast: JSON.stringify(forecast) } });
     });
-  }, [getTodaysForecast, router]);
+  }, [city, getTodaysForecast, router]);
 
   const searchDisabled = useMemo(() => {
     return isLoading || !city;
@@ -32,6 +32,7 @@ export function HomeScreen() {
         source={require("../../../assets/images/search-background.jpg")}
         style={styles.imageBackground}
       >
+        <Image style={styles.logo} source={require("../../../assets/images/logo.png")} />
         <View style={styles.searchView}>
           <TextInput
             value={city}
@@ -55,6 +56,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  logo: { width: 150, height: 150, position: "absolute", top: 100 },
   imageBackground: {
     padding: 20,
     flex: 1,
