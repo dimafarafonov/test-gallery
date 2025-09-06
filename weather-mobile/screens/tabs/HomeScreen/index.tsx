@@ -13,17 +13,17 @@ export function HomeScreen() {
   const [city, setCity] = useState("");
 
   const { getTodaysForecast, isLoading } = useForecastApi();
-  const {} = useForecastHistory();
+  const { setHistoryEntry } = useForecastHistory();
 
   const search = useCallback(() => {
-    getTodaysForecast({ city }).then(({ forecast }) => {
+    getTodaysForecast({ city }).then(async ({ forecast }) => {
       if (!forecast) {
         return;
       }
-
+      await setHistoryEntry({ key: forecast.name.toLocaleLowerCase(), label: forecast.name });
       router.navigate({ pathname: "/forecast-modal", params: { forecast: JSON.stringify(forecast) } });
     });
-  }, [city, getTodaysForecast, router]);
+  }, [city, getTodaysForecast, router, setHistoryEntry]);
 
   const searchDisabled = useMemo(() => {
     return isLoading || !city;

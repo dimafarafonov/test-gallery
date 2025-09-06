@@ -4,12 +4,12 @@ import { useForecastHistory } from "@/hooks/useForecastHistory";
 import { useForecastApi } from "@/services/weather/hooks/useForecastApi";
 import { router } from "expo-router";
 import { useCallback } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Animated, { FadeIn } from "react-native-reanimated";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export const HistoryScreen = () => {
-  const { history } = useForecastHistory();
+  const { history, deleteItem } = useForecastHistory();
   const { getTodaysForecast, isLoading } = useForecastApi();
 
   const findCity = useCallback(
@@ -33,12 +33,20 @@ export const HistoryScreen = () => {
           <TouchableOpacity key={key} style={styles.item} onPress={() => findCity({ city: label })}>
             <Text style={styles.itemText}>{label}</Text>
           </TouchableOpacity>
-          <DeleteIcon label={label} onDelete={() => null} />
+          <DeleteIcon label={label} onDelete={() => deleteItem(key)} />
         </View>
       );
     },
-    [findCity]
+    [deleteItem, findCity]
   );
+
+  const EmptyList = useCallback(() => {
+    return (
+      <View style={styles.emptyContainer}>
+        <Text>{"You don't have history yet."}</Text>
+      </View>
+    );
+  }, []);
 
   if (isLoading) {
     return <LoadingIndicator />;
@@ -49,6 +57,7 @@ export const HistoryScreen = () => {
       <Animated.FlatList
         entering={FadeIn}
         style={styles.list}
+        ListEmptyComponent={EmptyList}
         data={history}
         renderItem={renderItem}
         keyExtractor={({ key }) => key.toString()}
@@ -58,6 +67,12 @@ export const HistoryScreen = () => {
 };
 
 const styles = StyleSheet.create({
+  emptyContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: Dimensions.get("window").height / 2,
+  },
   list: {
     paddingBottom: 55,
     paddingHorizontal: 10,

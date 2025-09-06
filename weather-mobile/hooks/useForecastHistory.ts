@@ -1,22 +1,81 @@
-import { useCallback } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useCallback, useEffect, useState } from "react";
 
-const mockItems = [
-  { key: "kyiv", label: "Kyiv" },
-  { key: "london", label: "London" },
-  { key: "paris", label: "Paris" },
-  { key: "new_york", label: "New York" },
-  { key: "tokyo", label: "Tokyo" },
-  { key: "sydney", label: "Sydney" },
-  { key: "berlin", label: "Berlin" },
-  { key: "madrid", label: "Madrid" },
-  { key: "moscow", label: "Moscow" },
-  { key: "rio", label: "Rio de Janeiro" },
-  { key: "cape_town", label: "Cape Town" },
-];
-export const useForecastHistory = () => {
-  const deleteEntry = useCallback(() => {}, []);
+const STORAGE_KEY = "@forecast_history";
 
-  const undoDeletion = useCallback(() => {}, []);
+export type ForecastHistoryItem = {
+  key: string;
+  label: string;
+  timestamp: number;
+};
 
-  return { history: mockItems };
+type UseForecastHistoryReturn = {
+  history: ForecastHistoryItem[];
+  setHistoryEntry: (entry: Omit<ForecastHistoryItem, "timestamp">) => Promise<void>;
+  deleteItem: (key: string) => Promise<void>;
+  undoDeletion: () => void;
+};
+
+export const useForecastHistory = (): UseForecastHistoryReturn => {
+  const [history, setHistory] = useState<ForecastHistoryItem[]>([]);
+
+  // Load history on mount
+  useEffect(() => {
+    const loadHistory = async () => {
+      try {
+        const stored = await AsyncStorage.getItem(STORAGE_KEY);
+        if (stored) {
+          setHistory(JSON.parse(stored) as ForecastHistoryItem[]);
+        }
+      } catch (err) {
+        console.error("Failed to load history:", err);
+      }
+    };
+    loadHistory();
+  }, [history]);
+
+  const saveHistory = async (newHistory: ForecastHistoryItem[]) => {
+    try {
+      await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(newHistory)).then(() => setHistory(newHistory));
+    } catch (err) {
+      console.error("Failed to save history:", err);
+    }
+  };
+
+  const setHistoryEntry = useCallback(
+    async (entry: Omit<ForecastHistoryItem, "timestamp">) => {
+      const existingIndex = history.findIndex((i) => i.key === entry.key);
+
+      let newHistory: ForecastHistoryItem[];
+      if (existingIndex !== -1) {
+        newHistory = history.map((i, idx) =>
+          idx === existingIndex ? { ...i, label: entry.label, timestamp: Date.now() } : i
+        );
+      } else {
+        const newItem: ForecastHistoryItem = {
+          ...entry,
+          timestamp: Date.now(),
+        };
+        newHistory = [newItem, ...history];
+      }
+
+      await saveHistory(newHistory);
+    },
+    [history]
+  );
+
+  const deleteItem = useCallback(
+    async (key: string) => {
+      const newHistory = history.filter((item) => item.key !== key);
+      await saveHistory(newHistory);
+    },
+    [history]
+  );
+
+  // Undo placeholder
+  const undoDeletion = useCallback(() => {
+    // Implementation to be added later
+  }, []);
+
+  return { history, setHistoryEntry, deleteItem, undoDeletion };
 };
