@@ -1,37 +1,33 @@
+import { TodaysForecast } from "@/services/weather/hooks/useForecast";
 import { Ionicons } from "@expo/vector-icons";
+import { Image } from "expo-image";
 import { StyleSheet, Text, View } from "react-native";
 import { WeatherCardBase } from "./types";
 
 type Props = {
-  data: {
-    temp: string;
-    description: string;
-    min: string;
-    max: string;
-    wind: string;
-  };
+  data: TodaysForecast["forecast"];
 };
 
 export const WeatherCard = ({ cardStyle, data }: WeatherCardBase & Props) => {
   return (
     <View style={cardStyle}>
-      <Text style={styles.temperature}>{data.temp}°C</Text>
+      <Text style={styles.temperature}>{data?.temp_c}°C</Text>
 
       <View style={styles.row}>
-        <Ionicons name="partly-sunny-outline" size={22} color="#ff9e57" />
-        <Text style={styles.description}>{data.description}</Text>
+        <Image source={`https:${data?.condition.icon}`} style={{ height: 22, width: 22 }} />
+        <Text style={styles.description}>{data?.condition.text}</Text>
       </View>
 
       <View style={styles.row}>
         <Ionicons name="thermometer-outline" size={20} color="#ff9e57" />
         <Text style={styles.minmax}>
-          {data.min}° / {data.max}°
+          {data?.mintemp_c}° / {data?.maxtemp_c}°
         </Text>
       </View>
 
       <View style={styles.row}>
         <Ionicons name="leaf-outline" size={20} color="#ff9e57" />
-        <Text style={styles.wind}>{data.wind} m/s</Text>
+        <Text style={styles.wind}>{data?.wind_kph} kph</Text>
       </View>
     </View>
   );

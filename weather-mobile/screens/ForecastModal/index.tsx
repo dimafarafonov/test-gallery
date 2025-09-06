@@ -1,32 +1,33 @@
+import { type TodaysForecast } from "@/services/weather/hooks/useForecast";
 import { useLocalSearchParams, useNavigation } from "expo-router";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { StyleSheet, View } from "react-native";
 import { WeatherCard } from "./components/WeatherCard";
 import { WeatherCardSkeleton } from "./components/WeatherCardSkeleton";
 
 export function ForecastModal() {
-  const params = useLocalSearchParams<{ city?: string }>();
+  const params = useLocalSearchParams<{ forecast: string }>();
+
+  const parsedForecast = useMemo(() => {
+    return JSON.parse(params.forecast) as TodaysForecast["forecast"];
+  }, [params.forecast]);
 
   const navigation = useNavigation();
 
   useEffect(() => {
-    navigation.setOptions({ title: params?.city, headerShown: true });
-  }, [navigation, params.city]);
+    if (!parsedForecast) {
+      return;
+    }
+    navigation.setOptions({ title: `${parsedForecast.name}/${parsedForecast.country}`, headerShown: true });
+  }, [navigation, parsedForecast]);
 
-  const mockWeatherData = {
-    temp: "27",
-    min: "22",
-    description: "Partly Cloudy",
-    max: "30",
-    wind: "3.5",
-  };
-  const isLoading = true;
+  const isLoading = false;
   return (
     <View style={styles.container}>
       {isLoading ? (
         <WeatherCardSkeleton cardStyle={styles.card} />
       ) : (
-        <WeatherCard cardStyle={styles.card} data={mockWeatherData} />
+        <WeatherCard cardStyle={styles.card} data={parsedForecast} />
       )}
     </View>
   );
@@ -43,7 +44,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 20,
     margin: 15,
-    alignItems: "center",
+    alignItems: "flex-start",
     shadowColor: "#ff9e57",
     shadowOpacity: 0.2,
     shadowOffset: { width: 0, height: 3 },
