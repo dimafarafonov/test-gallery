@@ -1,50 +1,67 @@
-# Welcome to your Expo app 👋
+Weather Mobile 🌦️
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A simple mobile app built with React, Expo, and WeatherAPI that allows users to search for city weather forecasts, view search history, and manage previously searched cities.
 
-## Get started
+🚀 Features
+🌡️ View the current temperature, weather description (e.g., Sunny, Rainy), min/max temperatures, and wind speed.
+🏙️ Search weather data for any city.
+📜 Keep a history of previously searched cities.
+🔄 Re-fetch weather data by selecting a city from history.
+❌ Remove history items.
+↩️ Undo a remove action
 
-1. Install dependencies
+🛠️ Tech Stack
 
-   ```bash
-   npm install
-   ```
+React (with Expo for mobile development)
+JavaScript (TypeScript support optional)
+CSS frameworks as needed
+WeatherAPI (for weather data)
 
-2. Start the app
+📦 Getting Started
+1. Clone the repository
+git clone https://github.com/dimafarafonov/test-tasks/tree/main/weather-mobile
+cd weather-mobile
 
-   ```bash
-   npx expo start
-   ```
+2. Install dependencies
+yarn install
 
-In the output, you'll find options to open the app in a
+3. Environment variables
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+Create a .env.local file in the root directory based on .env.example.
+You must add your WeatherAPI key like this:
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+EXPO_PUBLIC_WEATHER_API_KEY=your_api_key_here
 
-## Get a fresh project
 
-When you're ready, run:
+👉 To obtain an API key, register at WeatherAPI.com
+.
 
-```bash
-npm run reset-project
-```
+🧑‍💻 Development
+Run the project locally:
+yarn dev
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
 
-## Learn more
+Platform-specific runs:
+Android: yarn run android
+iOS: yarn run ios
+Web: yarn run web
+Lint your code:
+yarn run lint
 
-To learn more about developing your project with Expo, look at the following resources:
+📱 Deployment
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+We recommend using EAS Build to automate builds for iOS and Android.
+For now, this README assumes local development only.
 
-## Join the community
+✅ User Stories (Implemented / Planned)
+ View weather forecast for a submitted city
+ Display current temp, weather description, min/max temp, wind speed
+ Keep a history of searched cities
+ Fetch weather data from history items
+ Remove history items
+ Undo remove action (optional)
+📄 License
 
-Join our community of developers creating universal apps.
+This project is licensed under the MIT License.
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+(docs are written with help of AI for the sake of saving some time)
