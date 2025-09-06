@@ -1,4 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Toast from "react-native-toast-message";
+
 import { useCallback, useEffect, useState } from "react";
 
 const STORAGE_KEY = "@forecast_history";
@@ -13,7 +15,6 @@ type UseForecastHistoryReturn = {
   history: ForecastHistoryItem[];
   setHistoryEntry: (entry: Omit<ForecastHistoryItem, "timestamp">) => Promise<void>;
   deleteItem: (key: string) => Promise<void>;
-  undoDeletion: () => void;
 };
 
 export const useForecastHistory = (): UseForecastHistoryReturn => {
@@ -64,18 +65,32 @@ export const useForecastHistory = (): UseForecastHistoryReturn => {
     [history]
   );
 
+  // Undo placeholder
+  const undoDeletion = useCallback(
+    async (item: ForecastHistoryItem) => {
+      Toast.show({
+        position: "top",
+        type: "success",
+        text1: "Success",
+        visibilityTime: 5000,
+        text2: "Press this pop up to UNDO the action, you have 5 seconds to decide.",
+        onPress: () => setHistoryEntry(item),
+      });
+    },
+    [setHistoryEntry]
+  );
+
   const deleteItem = useCallback(
     async (key: string) => {
       const newHistory = history.filter((item) => item.key !== key);
       await saveHistory(newHistory);
+      await undoDeletion(
+        history.find(({ key: deleteKey }) => {
+          return key === deleteKey;
+        })!
+      );
     },
-    [history]
+    [history, undoDeletion]
   );
-
-  // Undo placeholder
-  const undoDeletion = useCallback(() => {
-    // Implementation to be added later
-  }, []);
-
-  return { history, setHistoryEntry, deleteItem, undoDeletion };
+  return { history, setHistoryEntry, deleteItem };
 };
